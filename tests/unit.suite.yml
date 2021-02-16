@@ -1,0 +1,12 @@
+suite_namespace: svit\tools\tests\unit
+actor: UnitTester
+modules:
+    enabled:
+        - Db:
+            dump: 'tests/_data/dump.sql'
+            populate: true
+            cleanup: true
+        - Yii2:
+              part: [init, orm, email, fixtures]
+        - Asserts
+        - \svit\tools\tests\Helper\Unit
