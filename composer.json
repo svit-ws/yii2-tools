@@ -2,6 +2,7 @@
     "name": "svit-ws/yii2-tools",
     "description": "Common tools, mixins, helpers, behaviors, validators & etc.",
     "type": "yii2-extension",
+    "license": "MIT",
     "keywords": [
         "yii2",
         "extension",
