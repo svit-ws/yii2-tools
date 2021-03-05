@@ -246,43 +246,4 @@ abstract class AbstractEnum
             'format' => 'raw',
         ];
     }
-
-    /**
-     * @return array
-     * @deprecated use getOptions() instead
-     */
-    public static function getClientValues()
-    {
-        return static::getOptions();
-    }
-
-    /**
-     * @param $key
-     * @return string
-     * @deprecated use getValue() instead
-     */
-    public static function getClientValue($key)
-    {
-        return static::getValue($key);
-    }
-
-    /**
-     * @return array
-     * @deprecated use getLabels() instead
-     */
-    public static function getLabeledClientValues()
-    {
-        return static::getLabels();
-    }
-
-    /**
-     * @param $key
-     * @param null $value
-     * @return string
-     * @deprecated use getLabel() instead
-     */
-    public static function getLabeledClientValue($key, $value = null)
-    {
-        return static::getLabel($key, $value);
-    }
 }
