@@ -12,7 +12,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @param callable $callback
      * @return bool|mixed
      */
-    public static function find(&$array, $callback)
+    public static function find($array, $callback)
     {
         foreach ($array as $item) {
             if (call_user_func($callback, $item)) {
@@ -46,6 +46,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @param string|\Closure $from represents array value
      * @param string|\Closure $to
      * @return array
+     * @throws \Exception
      */
     public static function mapMulti($array, $from, $to)
     {
@@ -69,7 +70,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper
      * @param null $param
      * @param bool $prefix
      * @return mixed|null
-     * @see \common\tests\unit\ArrayHelperCest::matchWords
+     * @throws \Exception
      */
     public static function matchWords($needle, $haystack, $param = null, $prefix = true)
     {

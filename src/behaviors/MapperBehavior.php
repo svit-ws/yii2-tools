@@ -93,7 +93,7 @@ class MapperBehavior extends Behavior
 
     public function __isset($name)
     {
-        return isset($this->_data[$name]) ?? parent::__isset($name);
+        return isset($this->_data[$name]) ? $this->_data[$name] : parent::__isset($name);
     }
 
     public function canSetProperty($name, $checkVars = true)
@@ -103,6 +103,6 @@ class MapperBehavior extends Behavior
 
     public function canGetProperty($name, $checkVars = true)
     {
-        return $this->__isset($name) ?? parent::canGetProperty($name, $checkVars);
+        return $this->__isset($name) ?: parent::canGetProperty($name, $checkVars);
     }
 }

@@ -3,12 +3,9 @@
 namespace svit\tools\enums;
 
 use ReflectionClass;
-use ReflectionClassConstant;
-use ReflectionMethod;
 use svit\tools\helpers\ArrayHelper;
 use svit\tools\helpers\DbHelper;
 use svit\tools\helpers\NullHelper;
-use svit\tools\models\GridOptionsInterface;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -16,36 +13,31 @@ use yii\helpers\Inflector;
 /**
  * Description of AbstractEnum
  */
-abstract class AbstractEnum implements GridOptionsInterface
+abstract class AbstractEnum
 {
     private function __construct()
     {
     }
 
     /**
-     * @param int $modifiers
-     * @return ReflectionClassConstant[]
+     * @return array
      */
-    protected static function getConstants($modifiers = ReflectionMethod::IS_PUBLIC)
+    protected static function getConstants()
     {
         static $constCacheArray = [];
 
-        try {
-            $calledClass = get_called_class();
-
-            if (!array_key_exists($calledClass, $constCacheArray)) {
+        $calledClass = get_called_class();
+        if (!array_key_exists($calledClass, $constCacheArray)) {
+            try {
                 $reflect = new ReflectionClass($calledClass);
-                $constCacheArray[$calledClass] = $reflect->getReflectionConstants();
+                $constCacheArray[$calledClass] = $reflect->getConstants();
+            } catch (\ReflectionException $e) {
+                Yii::error($e->getMessage());
+                return [];
             }
-
-            return array_filter($constCacheArray[$calledClass], function (ReflectionClassConstant $item) use ($modifiers) {
-                return (bool)($item->getModifiers() & $modifiers);
-            });
-        } catch (\Throwable $exception) {
-            Yii::error($exception->getMessage());
         }
 
-        return [];
+        return $constCacheArray[$calledClass];
     }
 
     protected static function addPrefix($value = null)
@@ -70,7 +62,7 @@ abstract class AbstractEnum implements GridOptionsInterface
 
     public static function getHtmlClass($key, $prefix = 'badge')
     {
-        $class = static::htmlClassMap()[$key] ?? $key;
+        $class = ArrayHelper::getValue(static::htmlClassMap(), $key, $key);
 
         if ($prefix) {
             $class = "$prefix $class";
@@ -84,9 +76,7 @@ abstract class AbstractEnum implements GridOptionsInterface
      */
     public static function getValues()
     {
-        return array_map(function (ReflectionClassConstant $item) {
-            return $item->getValue();
-        }, static::getConstants());
+        return array_values(static::getConstants());
     }
 
     /**
@@ -95,15 +85,13 @@ abstract class AbstractEnum implements GridOptionsInterface
      */
     public static function getNames($translate = false)
     {
-        $arr = ArrayHelper::map(static::getConstants(), function (ReflectionClassConstant $item) {
-            return $item->getValue();
-        }, 'name');
+        $items = array_flip(static::getConstants());
 
         if ($translate) {
-            $arr = array_map('static::getValue', $arr);
+            $items = array_map('static::getValue', $items);
         }
 
-        return $arr;
+        return $items;
     }
 
     /**
@@ -129,11 +117,7 @@ abstract class AbstractEnum implements GridOptionsInterface
      */
     public static function getOptions($config = [])
     {
-        $items =  ArrayHelper::map(static::getConstants(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED), function (ReflectionClassConstant $item) {
-            return $item->getValue() ?? NullHelper::VALUE;
-        }, function (ReflectionClassConstant $item) {
-            return static::getValue($item->getValue());
-        });
+        $items = array_map('static::getValue', static::getConstants());
 
         if ($config === null || !empty($config['null'])) {
             $items = NullHelper::option($items);

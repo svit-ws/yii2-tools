@@ -30,7 +30,7 @@ class RelationLinkBehavior extends Behavior
     {
         parent::attach($owner);
 
-        $this->owner->validators[] = new SafeValidator(['attributes' => $this->attributes]);
+        $this->owner->validators->append(new SafeValidator(['attributes' => $this->attributes]));
     }
 
     public function events()

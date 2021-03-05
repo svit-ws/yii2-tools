@@ -3,17 +3,16 @@
 namespace svit\tools\helpers;
 
 use Yii;
-use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 class DbHelper
 {
     public static function MigrationENUM($arr, $default = null)
     {
-        $result = 'ENUM(' . StringHelper::ArrayToString($arr) . ') ';
+        $result = 'ENUM(\'' . implode("', '", $arr) . '\')';
 
         if (!empty($default)) {
-            $result .= 'DEFAULT \'' . $default . '\'';
+            $result .= ' DEFAULT \'' . $default . '\'';
         }
 
         return $result;

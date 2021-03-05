@@ -19,7 +19,6 @@ class GridHelper
             height: 90px;
             margin: 0 auto;
             line-height: 1.4;
-            -webkit-line-clamp: 5;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
