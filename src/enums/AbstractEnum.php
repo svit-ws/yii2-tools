@@ -101,7 +101,13 @@ abstract class AbstractEnum
      */
     public static function getValue($key, $postfix = '')
     {
-        return Yii::t('enum', static::addPrefix($key)) . $postfix;
+        try {
+            return Yii::t('enum', static::addPrefix($key)) . $postfix;
+        } catch (\Exception $e) {
+            // Unable to locate message source for category 'enum'
+        }
+
+        return ucfirst($key);
     }
 
     /**
@@ -117,7 +123,7 @@ abstract class AbstractEnum
      */
     public static function getOptions($config = [])
     {
-        $items = array_map('static::getValue', static::getConstants());
+        $items = array_combine(static::getConstants(), array_map('static::getValue', static::getConstants()));
 
         if ($config === null || !empty($config['null'])) {
             $items = NullHelper::option($items);

@@ -43,6 +43,6 @@ class NullHelper
 
     public static function option($options = [])
     {
-        return [static::VALUE => \Yii::t('enum', '')] + $options;
+        return [static::VALUE => ''] + $options;
     }
 }
